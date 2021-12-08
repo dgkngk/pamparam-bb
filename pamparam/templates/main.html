@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <title>Landing</title>
+    <script src = "https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+  </head>
+  <body>
+    <div class = "container-xl bg-success" style = "--bs-bg-opacity: .3;">
+      <table class="table table-striped">
+        <div class = "container border rounded bg-light" style = "--bs-bg-opacity: .8;">
+        <tr>
+          <th>Exchange</th><th>StochRSI %k</th><th>StochRSI %d</th><th>Signal</th>
+        </tr>
+        </div>
+        {% for coin,dict in coin_data.items() %}
+          <tr>
+            <th> {{coin}}</th>
+            {% for col, info in dict.items() %}
+              <td>
+                {{info}}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    
+<!--
+    <script src="{{ url_for('static', filename='chart.js') }}"></script>
+    
+      <div style = "padding : 30">
+        <input type ="checkbox"/>RSI
+        <input type="text" id = "rsi_len" name = "rsi_len" placeholder = "14"/>
+        <input type="text" id = "rsi_ovs" name = "rsi_os" placeholder ="30"/>
+        <input type="text" id = "rsi_ovb" name = "rsi_ob" placeholder="70"/>
+      </div>-->
+      
+  </body>
+</html>
