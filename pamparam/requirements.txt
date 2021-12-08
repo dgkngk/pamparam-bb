@@ -1,6 +1,6 @@
 python-binance
 ta
-json
 numpy
 pandas
 Flask
+python-dotenv
