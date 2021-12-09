@@ -31,6 +31,7 @@ def get_klines(selected_interval):
     else:
         s_interval = Client.KLINE_INTERVAL_4HOUR
         
+     #@todo:multithreading here
     for exchange in exlist:
         candledata = []
         try:

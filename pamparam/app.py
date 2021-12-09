@@ -20,9 +20,25 @@ def index():
     toke = get_one_kline()
     return render_template("index.html", flask_token=toke)
 """
+@app.route("/1min")
+def onemin():
+    return get_klines("1MIN")
+
+@app.route("/15min")
+def fifteenmin():
+    return get_klines("15MIN")
+
+@app.route("/1hr")
+def onehour():
+    return get_klines("1HOUR")
+
 @app.route("/4hr")
 def fourhour():
     return get_klines("4HOUR")
+
+@app.route("/1d")
+def oneday():
+    return get_klines("1DAY")
 
 @app.route("/trial")
 def trial():
