@@ -27,9 +27,11 @@ class TickerList extends React.Component{
 
   handleChange(event) {    
     this.setState({value: event.target.value});
+    //this.setState({selection: 'nothing'});
     }
 
   handleSubmit(event){
+    this.setState({selection: 'nothing'})
     this.setState({selection: this.state.value});
     event.preventDefault();
   }
@@ -51,6 +53,7 @@ class TickerList extends React.Component{
           <input className="btn btn-primary" type="submit" value="Submit" />
         </form>
         <br></br>
+        <p style={{color: "white"}}>Currently Displaying:{this.state.selection}</p>
         <ApiCall selection={this.state.selection} />
         </div>
       );
@@ -105,6 +108,7 @@ class Clock extends React.Component {
 function ApiCall(props) {
     const [apiData, setApiData] = useState({"loading":{"loading1":"loading","loading2":"loading","signal":"loading"}});
     useEffect(() => {
+      setApiData({"loading":{"loading1":"loading","loading2":"loading","signal":"loading"}});
       fetch(props.selection).then(res => res.json()).then(data => {setApiData(data);
       });
     },[props.selection]);
