@@ -20,7 +20,7 @@ class App extends React.Component {
 class TickerList extends React.Component{
   constructor(props){
     super(props);
-    this.state = {value:'', selection:'nothing' ,list: {"1min":"1 Minute","15min":"15 Minutes","1hr":"1 Hours","4hr":"4 Hours","1d":"1 Day"}};
+    this.state = {value:'nothing', selection:'nothing' ,list: {'nothing':"...","1min":"1 Minute","15min":"15 Minutes","1hr":"1 Hours","4hr":"4 Hours","1d":"1 Day"}};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);     
   }
@@ -31,7 +31,6 @@ class TickerList extends React.Component{
 
   handleSubmit(event){
     this.setState({selection: this.state.value});
-    alert('submitted: ' + this.state.value);
     event.preventDefault();
   }
   render(){
