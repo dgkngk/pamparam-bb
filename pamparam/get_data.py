@@ -1,4 +1,4 @@
-import config, csv, json
+import config
 from binance.client import Client
 from tafunc import ta_analyze
 from collections import OrderedDict
@@ -55,7 +55,7 @@ def get_one_kline():#trial method for getting kline data
     
     try:
         a = (client.get_klines(symbol = "DOGEUSDT", interval = Client.KLINE_INTERVAL_15MINUTE, limit = 1))
-        it = iter(a)
+        
         dct = dict(zip(range(12),a))
         return dct
     
