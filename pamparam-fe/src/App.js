@@ -119,7 +119,7 @@ function ApiCall(props) {
       <table className="table table-dark">
         <thead>
           <tr>
-          <th scope = "col">Coin</th>
+          <th scope = "col">Exchange</th>
           <th scope = "col">%d</th>
           <th scope = "col">%k</th>
           <th scope = "col">Signal</th>

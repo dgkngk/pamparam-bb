@@ -1,4 +1,4 @@
-import config
+import config, threading,time
 from binance.client import Client
 from tafunc import ta_analyze
 from collections import OrderedDict
@@ -31,22 +31,34 @@ def get_klines(selected_interval):
     else:
         s_interval = Client.KLINE_INTERVAL_4HOUR
         
-     #@todo:multithreading here
+     #@todo:multithreading here, done
+
+    threadLock = threading.Lock()
+    threads = []
+    i = 0
     for exchange in exlist:
-        candledata = []
+        i = i + 1
+        # candledata = []#one of my ultimate bruh moments, it shall remain here as a memento mori
         try:
             print(exchange)
-            candledata.append(client.get_klines(symbol = exchange, interval = s_interval, limit = 100))
-            klines[exchange] = candledata
-            unsorted[exchange] = ta_analyze(candledata)
-            print("done")
+            new_thread = threading.Thread(target=apicall_thread, args=(client, exchange, s_interval, unsorted, klines, threadLock)) 
+            new_thread.start()
+            threads.append(new_thread)
+
+            #not bruh moments
+            # candledata = (client.get_klines(symbol = exchange, interval = s_interval, limit = 100))
+            # klines[exchange] = candledata
+            # unsorted[exchange] = ta_analyze(candledata)
         except Exception as e:
             print("can't because")
             print(e)
+
+    for t in threads:
+        t.join()
             
     #sorting with lambda black magic fuckery
     sortedsigs = dict(OrderedDict(sorted(unsorted.items(), key= lambda t:t[1]['signal'])))
-    print("sorted")
+    print (str(i) + " coins analysed and sorted")
     
     return (sortedsigs)
 
@@ -63,4 +75,12 @@ def get_one_kline():#trial method for getting kline data
         print(e)
         return("nah")
 
-
+def apicall_thread(client, exchange, s_interval, unsorted, klines, lock):
+    #parellelized part
+    candledata = (client.get_klines(symbol = exchange, interval = s_interval, limit = 100))
+    ta_result = ta_analyze(candledata)
+    #mutex
+    lock.acquire()
+    klines[exchange] = candledata
+    unsorted[exchange] = ta_result
+    lock.release()

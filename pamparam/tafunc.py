@@ -3,14 +3,14 @@ import ta
 
 
 def ta_analyze(candledata):
-    print("analysing")
+    
     result = {}
     close_list = []
-    last_h = float(candledata[0][-1][2])
-    last_l = float(candledata[0][-1][3])
+    last_h = float(candledata[-1][2])
+    last_l = float(candledata[-1][3])
     
     
-    for trade in candledata[0]:
+    for trade in candledata:
         close_list.append(float(trade[4]))
 
             
@@ -22,10 +22,10 @@ def ta_analyze(candledata):
     
     t_bh = indicator_bb.bollinger_hband()
     t_bl = indicator_bb.bollinger_lband()#maybe add strat for squeezes for this
-    proximity_factor = abs((float(candledata[0][-1][4]) - t_bh[len(t_bh)-1]) / 4) #half of the standard deviation
+    proximity_factor = abs((float(candledata[-1][4]) - t_bh[len(t_bh)-1]) / 4) #half of the standard deviation
     
-    result["k%"]=t_k[len(t_k)-1]*100
-    result["d%"]=t_d[len(t_d)-1]*100
+    result["k%"]=float("{0:.3f}".format(t_k[len(t_k)-1]*100))
+    result["d%"]=float("{0:.3f}".format(t_d[len(t_d)-1]*100))#some hacking to clear out unnecessary precision
     # result["bh"]=t_bh[len(t_bh)-1]
     # result["bl"]=t_bl[len(t_bl)-1]
     
@@ -61,6 +61,6 @@ def ta_analyze(candledata):
     else:
         result["signal"] = "hold?"
         
-    print("analysed")
+    
     return result
 
