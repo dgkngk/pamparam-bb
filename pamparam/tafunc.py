@@ -63,8 +63,9 @@ def ta_analyze(candledata):
             result["signal"] = "weak sell(bollinger sell)"
 
     else:
-        result["k%"] = "not enough"
-        result["d%"] = "data gathered"
-        result["signal"] = "yet for this coin"
+        raise ValueError(
+            """DO NOT PANIC,
+can't analyze this coin because there is not enough data.
+Maybe it's a newly issued coin?""")
 
     return result
