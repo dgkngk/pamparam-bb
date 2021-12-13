@@ -17,8 +17,7 @@ def get_klines(selected_interval):
 
     for symbol in exinfo["symbols"]:
         if((symbol["quoteAsset"] == "USDT")
-            & (symbol["isSpotTradingAllowed"] is True)
-                & (symbol["isMarginTradingAllowed"]) is True):
+            & (symbol["isSpotTradingAllowed"] is True)):
             exlist.append(symbol["symbol"])
 
     # getting the kline data to analyse for the exchangeable assets
@@ -43,7 +42,6 @@ def get_klines(selected_interval):
     threads = []
     i = 0
     for exchange in exlist:
-        i = i + 1
         # candledata = []#one of my ultimate bruh moments,
         # it shall remain here as a memento mori
         try:
@@ -52,7 +50,7 @@ def get_klines(selected_interval):
                 client, exchange, s_interval, unsorted, klines, threadLock))
             new_thread.start()
             threads.append(new_thread)
-
+            i = i + 1
             # not bruh moments
             # candledata = (client.get_klines(*yadayada*))
             # klines[exchange] = candledata
@@ -91,7 +89,7 @@ def get_one_kline():  # trial method for getting kline data
 def apicall_thread(client, exchange, s_interval, unsorted, klines, lock):
     # parellelized part
     candledata = (client.get_klines(
-        symbol=exchange, interval=s_interval, limit=100))
+        symbol=exchange, interval=s_interval, limit=50))
     ta_result = ta_analyze(candledata)
     # mutex
     lock.acquire()

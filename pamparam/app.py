@@ -9,7 +9,7 @@ app.config['JSON_SORT_KEYS'] = False
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
-        list = {"15m":"15MIN","1h":"1HOUR","4h":"4HOUR","1d":"1DAY","1min":"1MIN"}
+        list = {"15min":"15MIN","1hr":"1HOUR","4hr":"4HOUR","1d":"1DAY","1min":"1MIN"}
         return render_template('index.html', ticker_list=list, flask_token="hello")
     else:
         coin_data = get_klines(request.form['selection'])
