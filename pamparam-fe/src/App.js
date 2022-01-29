@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import cat from './cat.png';
 import './App.css';
 import React, {useState, useEffect} from 'react';
 
@@ -53,7 +54,7 @@ class TickerList extends React.Component{
           <input className="btn btn-primary" type="submit" value="Submit" />
         </form>
         <br></br>
-        <p style={{color: "white"}}>Currently Displaying:{this.state.selection}</p>
+        <p style={{color: "white"}}>Currently Displaying: {this.state.selection}</p>
         <ApiCall selection={this.state.selection} />
         </div>
       );
@@ -106,9 +107,9 @@ class Clock extends React.Component {
   }
 }
 function ApiCall(props) {
-    const [apiData, setApiData] = useState({"loading":{"loading1":"loading","loading2":"loading","signal":"loading"}});
+    const [apiData, setApiData] = useState({"loading":{"loading1":"loading","loading2":"loading","loading3":"loading","loading4":"loading","loading5":"loading","loading6":"loading","loading7":"loading"}});
     useEffect(() => {
-      setApiData({"loading":{"loading1":"loading","loading2":"loading","signal":"loading"}});
+      setApiData({"loading":{"loading1":"loading","loading2":"loading","loading3":"loading","loading4":"loading","loading5":"loading","loading6":"loading","loading7":"loading"}});
       fetch(props.selection).then(res => res.json()).then(data => {setApiData(data);
       });
     },[props.selection]);
@@ -116,13 +117,18 @@ function ApiCall(props) {
 
     return(
       <div>
-      <table className="table table-dark">
+      <p style={{ fontSize:"16px" }}>StochRSI=k:d-price:trend,BollingerBands=price:trend,MACD=macd:macd_signal-price:trend,VWAP=vwap-trend:price,UnP&up=Underpriced,OvP&op=overpriced,ne=neutral</p>
+      <table style={{ fontSize:"16px" }} className="table table-dark">
         <thead>
           <tr>
           <th scope = "col">Exchange</th>
-          <th scope = "col">%d</th>
-          <th scope = "col">%k</th>
-          <th scope = "col">Signal</th>
+          <th scope = "col">NVT</th>
+          <th scope = "col">StochRSI</th>
+          <th scope = "col">BollingerBands</th>
+          <th scope = "col">MACD</th>
+          <th scope = "col">VWAP</th>
+          <th scope = "col">UnP/OvP</th>
+          <th scope = "col">Bull/Bear</th>
           </tr>
           {Object.keys(apiData).map((d,key) => {
             return(<tr>

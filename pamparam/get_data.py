@@ -3,7 +3,7 @@ import threading
 from binance.client import Client
 from tafunc import ta_analyze
 from collections import OrderedDict
-# @todo: add overload for user selection of data intervals
+import requests
 # this function gets the kline data provided in the binance api
 
 
@@ -11,13 +11,18 @@ def get_klines(selected_interval):
     client = Client(config.API_KEY, config.API_SECRET)
 
     # get the possible exchanges for the quoting asset, that are spot tradeable
-    exinfo = client.get_exchange_info()
+    # exinfo = client.get_exchange_info()
     exlist = []
+    # evil api endpoint hack that binance doesn't want you to know
+    # ensures we get usable coins
+    address = "https://www.binance.com/exchange-api/v2/public/asset-service/product/get-products"
+    gcei_resp = requests.get(address)
+    json = gcei_resp.json()
 
-    for symbol in exinfo["symbols"]:
-        if((symbol["quoteAsset"] == "USDT")
-                & (symbol["isSpotTradingAllowed"] is True)):
-            exlist.append(symbol["symbol"])
+    for symbol in json["data"]:
+        if((symbol["q"] == "USDT")):
+                # & (symbol["isSpotTradingAllowed"] is True)):
+            exlist.append(symbol["s"])
 
     # getting the kline data to analyse for the exchangeable assets
     klines = {}
@@ -44,7 +49,7 @@ def get_klines(selected_interval):
         # candledata = []#one of my ultimate bruh moments,
         # it shall remain here as a memento mori
         new_thread = threading.Thread(target=apicall_thread, args=(
-            client, exchange, s_interval, unsorted, klines, threadLock))
+            client, exchange, s_interval, unsorted, klines, threadLock, gcei_resp))
         new_thread.start()
         threads.append(new_thread)
         i = i + 1
@@ -57,8 +62,10 @@ def get_klines(selected_interval):
         t.join()
 
     # sorting with lambda black magic fuckery
+    # note from future: not actually that black magic
     sortedsigs = dict(OrderedDict(
-        sorted(unsorted.items(), key=lambda t: t[1]['signal'])))
+        sorted(unsorted.items(), key=lambda t: t[1]['BU'],reverse=True)))
+
     print("\n" + str(len(threads)) + " threads that resulted with, "
           + str(len(sortedsigs)) + " coins analysed and sorted")
 
@@ -69,9 +76,9 @@ def get_one_kline():  # trial method for getting kline data
     client = Client(config.API_KEY, config.API_SECRET)
 
     try:
-        a = (client.get_klines(symbol="DOGEUSDT",
-                               interval=Client.KLINE_INTERVAL_15MINUTE,
-                               limit=1))
+        a = (client.get_klines(symbol="BTCUSDT",
+                               interval=Client.KLINE_INTERVAL_1HOUR,
+                               limit=5))
 
         dct = dict(zip(range(12), a))
         return dct
@@ -81,18 +88,19 @@ def get_one_kline():  # trial method for getting kline data
         return("nah")
 
 
-def apicall_thread(client, exchange, s_interval, unsorted, klines, lock):
+def apicall_thread(client, exchange, s_interval, unsorted, klines, lock, gcei_resp):
     try:
         # parellelized part
         candledata = (client.get_klines(
             symbol=exchange, interval=s_interval, limit=100))
-        ta_result = ta_analyze(candledata)
+        ta_result = ta_analyze(candledata, s_interval, exchange, gcei_resp)
         # mutex
         lock.acquire()
         klines[exchange] = candledata
         unsorted[exchange] = ta_result
         print(exchange)
         lock.release()
+        # print(exchange)
 
     except Exception as e:
         lock.acquire()
