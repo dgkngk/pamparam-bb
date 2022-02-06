@@ -93,7 +93,7 @@ def apicall_thread(client, exchange, s_interval, unsorted, klines, lock, gcei_re
         # parellelized part
         candledata = (client.get_klines(
             symbol=exchange, interval=s_interval, limit=100))
-        ta_result = ta_analyze(candledata, s_interval, exchange, gcei_resp)
+        ta_result = ta_analyze(candledata, exchange, gcei_resp)
         # mutex
         lock.acquire()
         klines[exchange] = candledata

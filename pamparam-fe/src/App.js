@@ -118,7 +118,7 @@ function ApiCall(props) {
     return(
       <div>
       <p style={{ fontSize:"16px", color:"white" }}>StochRSI=k:d-price:trend,BollingerBands=price:trend,MACD=macd:macd_signal-price:trend,VWAP=vwap-trend:price,UnP&up=Underpriced,OvP&op=overpriced,ne=neutral</p>
-      <table style={{ fontSize:"16px" }} className="table table-dark">
+      <table style={{ fontSize:"18px" }} className="table table-dark table-hover table-striped table-bordered border-success rounded-3">
         <thead>
           <tr>
           <th scope = "col">Exchange</th>

@@ -1,8 +1,7 @@
 import pandas as pd
 import ta
 import time
-import requests
-import config
+# import requests
 from coinmetrics.api_client import CoinMetricsClient
 
 
@@ -20,11 +19,9 @@ def get_current_exchange_info(exchange, resp):
 
 # maybe modulizing this part may help more
 # @to-do: de-complexifying needed
-def ta_analyze(candledata, interval, exchange, gcei_resp):
+def ta_analyze(candledata, exchange, gcei_resp):
 
     result = {}
-    last_h = float(candledata[-1][2])
-    last_l = float(candledata[-1][3])
     close_list = []
     high_list = []
     low_list = []
@@ -197,16 +194,18 @@ Maybe it's a newly issued coin?""")
     if result_vwap >= result_close:
         result["VWAP"] = result["VWAP"] + "-bull:"
         bull = bull + 1
-        if abs(result_vwap - result_close) < (proximity_factor * 1.2):
+        if abs(result_vwap - result_close) > (proximity_factor * 1.5):
             result["VWAP"] = result["VWAP"] + "op"
+            overpriced = overpriced + 1
         else:
             result["VWAP"] = result["VWAP"] + "ne"
 
     else:
         result["VWAP"] = result["VWAP"] + "-bear:"
         bear = bear + 1
-        if abs(result_vwap - result_close) < (proximity_factor * 1.2):
+        if abs(result_vwap - result_close) > (proximity_factor * 1.5):
             result["VWAP"] = result["VWAP"] + "up"
+            underpriced = underpriced + 1
         else:
             result["VWAP"] = result["VWAP"] + "ne"
 
@@ -229,7 +228,7 @@ def nvt_analysis(exchange, gcei_resp):  # blood, sweat, tears
             assets=base_asset, metrics=["NVTAdj90"],
             start_time=start_time).to_dataframe()["NVTAdj90"]
     except Exception as e:
-        print("\nno nvt data for this coin")
+        print("\nno nvt data for this coin", e)
         return (-999)
 
     # calculating how many standard_dev away
