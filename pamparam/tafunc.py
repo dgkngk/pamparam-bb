@@ -87,7 +87,7 @@ def ta_analyze(candledata, exchange, gcei_resp):
     result_bbh = t_bh[len(t_bh) - 1]
     result_bbm = t_bm[len(t_bm) - 1]
     result_bbl = t_bl[len(t_bl) - 1]
-    result_vwap = float("{0:.3f}".format(t_vwap[len(t_vwap) - 1]))
+    result_vwap = float("{0:.6f}".format(t_vwap[len(t_vwap) - 1]))
     result_macd = float("{0:.3f}".format(t_macd[len(t_macd) - 1]))
     result_macd_s = float("{0:.3f}".format(t_macd_s[len(t_macd_s) - 1]))
 
